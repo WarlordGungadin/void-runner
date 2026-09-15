@@ -4,16 +4,15 @@ Portrait phone space shooter.
 
 ## Play on your phone
 
-Open this link in Safari or Chrome:
+Open this in Safari or Chrome:
 
-https://raw.githack.com/WarlordGungadin/void-runner/main/index.html
+https://htmlpreview.github.io/?https://github.com/WarlordGungadin/void-runner/blob/main/index.html
 
-Backup: https://cdn.jsdelivr.net/gh/WarlordGungadin/void-runner@main/index.html
+Then:
+1. Rotate the phone upright
+2. Tap the screen to launch
+3. Drag to move — it auto-fires on phones
+4. Optional: Share → Add to Home Screen
 
-Add to Home Screen for a full-screen icon.
-
-### Phone controls
-- Drag to move
-- Auto-fires on phones
-- FIRE button if you want extra shots
-- Top-right: mute and pause
+For a cleaner URL later: repo Settings → Pages → Deploy from branch `gh-pages` → Save.
+Then use https://warlordgungadin.github.io/void-runner/
