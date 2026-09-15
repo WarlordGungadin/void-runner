@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#04060f" />
   <title>HULLWAKE — Space Shooter</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,14 +11,15 @@
   <style>
     :root { --cyan:#4df0ff; --magenta:#ff4d9a; --gold:#ffd166; --bg:#04060f; }
     * { box-sizing:border-box; margin:0; padding:0; }
-    html,body { width:100%; height:100%; height:100dvh; overflow:hidden; background:var(--bg); color:#e8f6ff; font-family:"Share Tech Mono",monospace; touch-action:none; user-select:none; -webkit-user-select:none; }
-    #wrap { position:relative; width:100%; height:100dvh; display:flex; justify-content:center; background:radial-gradient(ellipse at 50% 120%,#12204a 0%,transparent 55%),#04060f; }
+    html,body { width:100%; height:100%; height:100dvh; overflow:hidden; background:var(--bg); color:#e8f6ff; font-family:"Share Tech Mono",monospace; touch-action:none; user-select:none; }
+    #wrap { position:relative; width:100%; height:100dvh; display:flex; justify-content:center; background:#04060f; }
     #stage { position:relative; height:100%; width:min(100vw,calc(100dvh * 9 / 16)); max-width:430px; overflow:hidden; background:#050814; }
-    canvas { display:block; width:100%; height:100%; touch-action:none; }
+    #game { display:block; width:100%; height:100%; touch-action:none; }
     #hud { position:absolute; inset:0; pointer-events:none; display:flex; flex-direction:column; z-index:10; }
     body:not(.playing) #hud, body:not(.playing) #touch { display:none !important; }
     #topbar { display:flex; justify-content:space-between; padding:calc(8px + env(safe-area-inset-top,0px)) 10px 0; font-size:11px; gap:8px; }
     #topbar b { color:var(--cyan); font-family:Orbitron,sans-serif; }
+    #lives img.life { width:16px !important; height:22px !important; margin-left:3px; vertical-align:middle; }
     #hudBtns { pointer-events:auto; display:flex; gap:6px; }
     #hudBtns button { width:36px; height:36px; border-radius:8px; border:1px solid #4df0ff55; background:rgba(8,16,36,.72); color:#c8f6ff; }
     #bossEta,#bossHud { margin:6px 12px 0; } #bossEta.hidden,#bossHud { display:none; } #bossHud.show { display:block; }
@@ -49,9 +49,15 @@
     #hangarPanel { overflow-y:auto; max-height:100%; }
     #hangarViewWrap { position:relative; border:1px solid #4df0ff44; border-radius:12px; overflow:hidden; margin:6px 0 10px; pointer-events:auto; }
     #hangarView { display:block; width:100%; height:210px; touch-action:none; }
+    .ship-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:8px 0 14px; }
+    .ship-card { display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px 6px 10px; }
+    .ship-card svg { width:40px !important; height:50px !important; display:block; }
+    .ship-card b, .ship-card small { display:block; text-align:center; }
     .vol-row { display:flex; align-items:center; gap:10px; margin:8px 18px; font-size:10px; color:#9ad7ff; }
     .vol-row input { flex:1; }
     #pausePanel,#overPanel { height:100%; display:flex; flex-direction:column; justify-content:center; }
+    #trans { position:absolute; inset:0; z-index:40; pointer-events:none; opacity:0; visibility:hidden; }
+    #transFx { position:absolute; inset:0; width:100%; height:100%; display:block; }
   </style>
 </head>
 <body>
@@ -139,6 +145,6 @@ window.VOID_SPRITES = {
   nebula:"https://assets-2-prod.whop.com/public/uploads/2026-09-15/e8348390-1436-4f21-919c-c0eadc212465/image.jpg"
 };
 </script>
-<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-15/5526945d-ba72-4f09-a64d-83edb5dd8071/text.js"></script>
+<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-15/3a060d4a-7960-4b04-89ed-cfab6eb1534c/text.js"></script>
 </body>
 </html>
