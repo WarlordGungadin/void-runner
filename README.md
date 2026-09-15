@@ -1,18 +1,13 @@
-# VOID RUNNER
+# HULLWAKE
 
 Portrait phone space shooter.
 
-## Play on your phone
+## Play
 
-Open this in Safari or Chrome:
+https://warlordgungadin.github.io/void-runner/
 
-https://htmlpreview.github.io/?https://github.com/WarlordGungadin/void-runner/blob/main/index.html
+Or the current build:
 
-Then:
-1. Rotate the phone upright
-2. Tap the screen to launch
-3. Drag to move — it auto-fires on phones
-4. Optional: Share → Add to Home Screen
+https://assets-2-prod.whop.com/public/uploads/2026-09-15/69287bb0-17fd-4154-bd8a-ce8a221da5d8/text.html
 
-For a cleaner URL later: repo Settings → Pages → Deploy from branch `gh-pages` → Save.
-Then use https://warlordgungadin.github.io/void-runner/
+Left stick moves. Right FIRE / BURST. Hangar upgrades save on that phone.
