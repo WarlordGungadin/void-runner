@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#04060f" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="VOID RUNNER" />
+  <title>VOID RUNNER — Space Shooter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    :root { --cyan: #4df0ff; --magenta: #ff4d9a; --gold: #ffd166; --bg: #04060f; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; height: 100dvh; overflow: hidden; background: var(--bg); color: #e8f6ff; font-family: "Share Tech Mono", monospace; touch-action: none; user-select: none; -webkit-user-select: none; }
+    #wrap { position: relative; width: 100%; height: 100%; height: 100dvh; display: flex; align-items: stretch; justify-content: center; background: radial-gradient(ellipse at 50% 120%, #12204a 0%, transparent 55%), radial-gradient(ellipse at 20% 0%, #1a0a2e 0%, transparent 40%), #04060f; }
+    #stage { position: relative; height: 100%; width: min(100vw, calc(100dvh * 9 / 16)); max-width: 430px; overflow: hidden; background: #050814; box-shadow: 0 0 60px #4df0ff18; }
+    canvas { display: block; width: 100%; height: 100%; background: transparent; cursor: none; touch-action: none; }
+    #hud { position: absolute; inset: 0; pointer-events: none; display: flex; flex-direction: column; }
+    #topbar { display: flex; justify-content: space-between; align-items: flex-start; padding: calc(8px + env(safe-area-inset-top, 0px)) 10px 0; font-size: 11px; letter-spacing: 0.08em; text-shadow: 0 0 10px #4df0ff88; gap: 8px; }
+    #topbar .stat { display: flex; gap: 8px; flex-wrap: wrap; }
+    #topbar b { color: var(--cyan); font-family: Orbitron, sans-serif; font-weight: 700; }
+    #lives { color: var(--magenta); }
+    #hudBtns { pointer-events: auto; display: flex; gap: 6px; }
+    #hudBtns button { width: 36px; height: 36px; border-radius: 8px; border: 1px solid #4df0ff55; background: rgba(8, 16, 36, 0.72); color: #c8f6ff; font-size: 14px; line-height: 1; -webkit-tap-highlight-color: transparent; }
+    #bossHud { display: none; margin: 8px 12px 0; pointer-events: none; }
+    #bossHud.show { display: block; }
+    #bossHud .name { font-family: Orbitron, sans-serif; font-size: 10px; letter-spacing: 0.22em; color: var(--gold); margin-bottom: 4px; text-align: center; }
+    #bossBar { height: 8px; background: #1a1020; border: 1px solid #ff4d9a66; overflow: hidden; }
+    #bossFill { height: 100%; width: 100%; background: linear-gradient(90deg, #ff4d9a, #ffd166); box-shadow: 0 0 10px #ff4d9a; }
+    #overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; padding: 16px; }
+    .panel { text-align: center; padding: 28px 22px; background: rgba(4, 8, 22, 0.82); border: 1px solid #4df0ff44; box-shadow: 0 0 40px #4df0ff22, inset 0 0 30px #4df0ff11; backdrop-filter: blur(6px); width: 100%; }
+    #titlePanel { padding: 0; border: 0; background: #050814; overflow: hidden; position: relative; }
+    #titlePanel img.cover { width: 100%; display: block; }
+    #titlePanel .launch { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 16px 16px; background: linear-gradient(transparent, rgba(4,6,15,0.92) 45%); }
+    #lives img.life { width: 16px; height: 22px; margin-left: 3px; vertical-align: middle; filter: drop-shadow(0 0 4px #4df0ff); }
+    .panel h1 { font-family: Orbitron, sans-serif; font-size: clamp(26px, 8vw, 44px); font-weight: 800; letter-spacing: 0.14em; color: #fff; text-shadow: 0 0 18px #4df0ff, 0 0 40px #4d7fff; margin-bottom: 6px; }
+    .panel .tag { color: var(--gold); letter-spacing: 0.28em; font-size: 11px; margin-bottom: 16px; }
+    .panel p { line-height: 1.5; color: #b8d4ea; margin: 7px 0; font-size: 13px; }
+    .panel .keys { color: var(--cyan); }
+    .panel .hint { margin-top: 18px; color: #fff; letter-spacing: 0.14em; animation: pulse 1.4s ease-in-out infinite; }
+    .hidden { display: none !important; }
+    @keyframes pulse { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
+    #touch { display: none; position: absolute; left: 0; right: 0; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); justify-content: space-between; align-items: flex-end; padding: 0 14px; pointer-events: none; z-index: 5; }
+    #touch .pads { display: flex; gap: 10px; }
+    #touch button { pointer-events: auto; width: 68px; height: 68px; border-radius: 50%; border: 1px solid #4df0ff66; background: rgba(8, 16, 36, 0.62); color: #c8f6ff; font-size: 20px; font-family: Orbitron, sans-serif; -webkit-tap-highlight-color: transparent; }
+    #touch button:active, #touch button.held { background: rgba(77, 240, 255, 0.22); }
+    #touch .fire { width: 84px; height: 84px; border-color: #ff4d9a88; color: #ffd0e4; }
+    #touch .fire:active, #touch .fire.held { background: rgba(255, 77, 154, 0.28); }
+    @media (pointer: coarse) { #touch { display: flex; } canvas { cursor: default; } }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="stage">
+      <canvas id="game" width="390" height="694"></canvas>
+      <div id="hud">
+        <div id="topbar">
+          <div class="stat">
+            <span>SCORE <b id="score">0</b></span>
+            <span>WAVE <b id="wave">1</b></span>
+            <span>BEST <b id="best">0</b></span>
+            <span id="lives">♥♥♥</span>
+          </div>
+          <div id="hudBtns">
+            <button type="button" id="btnMute" aria-label="Mute">🔊</button>
+            <button type="button" id="btnPause" aria-label="Pause">Ⅱ</button>
+          </div>
+        </div>
+        <div id="bossHud">
+          <div class="name" id="bossName">LEVIATHAN</div>
+          <div id="bossBar"><div id="bossFill"></div></div>
+        </div>
+      </div>
+      <div id="overlay">
+        <div class="panel" id="titlePanel">
+          <img class="cover" id="titleArt" alt="VOID RUNNER" />
+          <div class="launch">
+            <div class="tag">DEFY THE VOID. DESTROY THE LEVIATHAN.</div>
+            <p class="keys">DRAG to move · auto-fire on phone · P pause</p>
+            <p class="hint">TAP TO LAUNCH</p>
+          </div>
+        </div>
+        <div class="panel hidden" id="pausePanel">
+          <h1>PAUSED</h1>
+          <p class="keys">P, Esc, or the Ⅱ button</p>
+          <p class="hint">TAP Ⅱ TO RESUME</p>
+        </div>
+        <div class="panel hidden" id="overPanel">
+          <h1>HULL BREACH</h1>
+          <div class="tag">MISSION FAILED</div>
+          <p>Score <b id="finalScore">0</b> · Wave <b id="finalWave">1</b></p>
+          <p class="hint">TAP TO REDEPLOY</p>
+        </div>
+      </div>
+      <div id="touch">
+        <div class="pads">
+          <button type="button" id="btnL">◀</button>
+          <button type="button" id="btnR">▶</button>
+        </div>
+        <button type="button" class="fire" id="btnFire">FIRE</button>
+      </div>
+    </div>
+  </div>
+<script>
+window.VOID_SPRITES = {
+  player: "https://assets-2-prod.whop.com/public/uploads/2026-09-15/b2ae9211-f307-4e12-9aa2-34654a53cd51/image.png",
+  scout: "https://assets-2-prod.whop.com/public/uploads/2026-09-15/2a2b0c2d-3122-423d-a26a-fa43fdb754fb/image.png",
+  fighter: "https://assets-2-prod.whop.com/public/uploads/2026-09-15/8b344499-41e4-4bc0-baab-2825696cbd56/image.png",
+  heavy: "https://assets-2-prod.whop.com/public/uploads/2026-09-15/93f7d8c3-3428-46e3-a0c0-5b28169d1e07/image.png",
+  dart: "https://assets-2-prod.whop.com/public/uploads/2026-09-15/dbcdb4b0-40a9-4399-8f45-23107a1cf319/image.png",
+  leviathan: "https://assets-2-prod.whop.com/public/uploads/2026-09-15/ff51421d-3861-467f-a22f-256ed92cf665/image.png",
+  seraph: "https://assets-2-prod.whop.com/public/uploads/2026-09-15/ef85dce5-3562-430c-a3a2-560bc62c088c/image.png",
+  ash: "https://assets-2-prod.whop.com/public/uploads/2026-09-15/dd3d873e-0f11-446c-af8f-d00f3ede0854/image.png",
+  wraith: "https://assets-2-prod.whop.com/public/uploads/2026-09-15/35c22f1b-59cd-4e0d-b13f-77aa0a913acd/image.png",
+  rocket: "https://assets-2-prod.whop.com/public/uploads/2026-09-15/3c9bead2-19d7-4d58-89eb-0087ae524e19/image.png",
+  title: "https://assets-2-prod.whop.com/public/uploads/2026-09-15/fdc7efc4-0ce2-42b8-8ef3-aefe8e6ee4d1/image.jpg",
+  nebula: "https://assets-2-prod.whop.com/public/uploads/2026-09-15/e8348390-1436-4f21-919c-c0eadc212465/image.jpg"
+};
+</script>
+<script src="game.js"></script>
+</body>
+</html>
