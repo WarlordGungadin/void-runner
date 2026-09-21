@@ -28,7 +28,9 @@
     #overlay { position:absolute; inset:0; display:block; pointer-events:none; background:#050814; }
     body.playing #overlay { background:transparent; }
     .panel { pointer-events:auto; text-align:center; padding:24px 18px; background:#070b16; border:0; width:100%; }
-    #titlePanel, #hangarPanel, #overPanel, #pausePanel { position:absolute; inset:0; width:100%; height:100%; pointer-events:auto; background:#070b16; }
+    #titlePanel, #hangarPanel, #overPanel, #pausePanel, #settingsPanel { position:absolute; inset:0; width:100%; height:100%; pointer-events:auto; background:#070b16; }
+    body.ctrl-finger #joyBase { display:none !important; }
+    body.ctrl-finger #touch { justify-content:flex-end; }
     #titlePanel { padding:0; border:0; background:#050814; }
     #titlePanel img.cover { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 58%; opacity:0; filter:saturate(1.1) brightness(.7); transform:scale(1.08); transition:opacity 2.2s ease, transform 8s ease-out; }
     #titlePanel.awake img.cover { opacity:.88; transform:scale(1); }
@@ -45,10 +47,10 @@
     #titlePanel .launch { position:absolute; left:0; right:0; bottom:0; z-index:3; padding:16px 14px calc(18px + env(safe-area-inset-bottom,0px)); background:linear-gradient(transparent,rgba(4,6,15,.94) 40%); }
     .hidden { display:none !important; }
     .meta-row { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:10px 0 6px; }
-    .meta-row button,#hangarPanel button,#overPanel button,#pausePanel button,.diff {
+    .meta-row button,#hangarPanel button,#overPanel button,#pausePanel button,#settingsPanel button,.diff {
       border:1px solid #4df0ff66; background:rgba(8,16,36,.75); color:#c8f6ff; font-family:Orbitron,sans-serif; font-size:11px; letter-spacing:.1em; padding:8px 10px; border-radius:8px;
     }
-    #diffRow button.diff.active { border-color:#ffd166; color:#ffd166; }
+    #diffRow button.diff.active, #ctrlRow button.diff.active { border-color:#ffd166; color:#ffd166; }
     #touch { display:none; position:absolute; left:0; right:0; bottom:calc(8px + env(safe-area-inset-bottom,0px)); justify-content:space-between; align-items:flex-end; padding:0 12px; pointer-events:none; z-index:5; }
     body.playing #touch { display:flex; } body.paused #touch { display:none !important; }
     #joyBase { pointer-events:auto; width:118px; height:118px; border-radius:50%; border:2px solid #4df0ff77; background:rgba(8,16,36,.45); position:relative; }
@@ -105,6 +107,7 @@
           </div>
           <div class="meta-row">
             <button type="button" id="btnHangar">HANGAR</button>
+            <button type="button" id="btnSettings">SETTINGS</button>
             <button type="button" id="btnLaunch">LAUNCH</button>
           </div>
         </div>
@@ -115,8 +118,18 @@
         <label class="vol-row">MUSIC <input id="volMus" type="range" min="0" max="100" value="70" /></label>
         <label class="vol-row">SFX <input id="volSfx" type="range" min="0" max="100" value="80" /></label>
         <div class="meta-row"><button type="button" id="btnResume">CONTINUE</button></div>
-        <div class="meta-row"><button type="button" id="btnSave">SAVE</button><button type="button" id="btnPauseTitle">TITLE</button></div>
+        <div class="meta-row"><button type="button" id="btnSave">SAVE</button><button type="button" id="btnPauseSettings">SETTINGS</button><button type="button" id="btnPauseTitle">TITLE</button></div>
         <p id="pauseHint">BANK SAVES ON THIS PHONE</p>
+      </div>
+      <div class="panel hidden" id="settingsPanel">
+        <h1>SETTINGS</h1>
+        <p class="keys">CONTROLS</p>
+        <div class="meta-row" id="ctrlRow">
+          <button type="button" class="diff" data-ctrl="stick">JOYSTICK</button>
+          <button type="button" class="diff" data-ctrl="finger">ONE FINGER</button>
+        </div>
+        <p class="hint" id="ctrlExplain">Left stick moves. FIRE and BURST stay on the right.</p>
+        <div class="meta-row"><button type="button" id="btnSettingsBack">BACK</button></div>
       </div>
       <div class="panel hidden" id="hangarPanel">
         <h1>HANGAR</h1>
@@ -160,6 +173,6 @@ window.VOID_SPRITES = {
   nebula:"https://assets-2-prod.whop.com/public/uploads/2026-09-15/e8348390-1436-4f21-919c-c0eadc212465/image.jpg"
 };
 </script>
-<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-15/c64683a8-e2f3-49ae-887c-418a9058fc0b/text.js"></script>
+<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/2ea20042-aacb-449b-bb88-1d7c8874dd9b/text.js"></script>
 </body>
 </html>
