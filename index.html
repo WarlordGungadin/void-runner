@@ -88,7 +88,8 @@
     #metaBar { padding:8px 12px 0; font-size:10px; color:#9ad7ff; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; }
     #hangarPanel { overflow-y:auto; max-height:100%; }
     #hangarViewWrap { position:relative; border:1px solid #4df0ff44; border-radius:12px; overflow:hidden; margin:6px 0 10px; pointer-events:auto; }
-    #hangarView { display:block; width:100%; height:210px; touch-action:none; }
+    #hangar3d { display:block; position:absolute; inset:0; width:100%; height:210px; touch-action:none; z-index:0; }
+    #hangarView { display:block; position:relative; width:100%; height:210px; touch-action:none; pointer-events:none; background:transparent; z-index:1; }
     .ship-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:8px 0 14px; }
     .vol-row { display:flex; align-items:center; gap:10px; margin:8px 18px; font-size:10px; color:#9ad7ff; }
     #pausePanel,#overPanel,#opsPanel { height:100%; display:flex; flex-direction:column; justify-content:center; }
@@ -203,7 +204,7 @@
       <div class="panel hidden" id="hangarPanel">
         <h1>HANGAR</h1>
         <div class="tag" id="hangarScrap">SCRAP 0</div>
-        <div id="hangarViewWrap"><canvas id="hangarView" width="360" height="220"></canvas><div id="hangarToast"></div></div>
+        <div id="hangarViewWrap"><canvas id="hangar3d" width="360" height="220"></canvas><canvas id="hangarView" width="360" height="220"></canvas><div id="hangarToast"></div></div>
         <div class="ship-grid" id="shipGrid"></div>
         <div id="upgList"></div>
         <div class="meta-row"><button type="button" id="btnHangarBack">BACK</button></div>
@@ -257,9 +258,14 @@ window.VOID_SPRITES = {
   nebula:"https://assets-2-prod.whop.com/public/uploads/2026-09-15/e8348390-1436-4f21-919c-c0eadc212465/image.jpg"
 };
 </script>
+<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/8bebba13-05c3-4089-b7ac-251e04d8631a/text.js"></script>
+<script type="importmap">
+{"imports":{"three":"https://unpkg.com/three@0.170.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.170.0/examples/jsm/"}}
+</script>
+<script type="module" src="./assets/ships/hangar3d.js?v=1546"></script>
 <script>
-window.HW_ENGINE = "https://assets-2-prod.whop.com/public/uploads/2026-09-21/743d56d7-d1e5-4c9c-8b15-fd9adce1f275/text.js";
-window.HW_BUILD = "1545";
+window.HW_ENGINE = "https://assets-2-prod.whop.com/public/uploads/2026-09-21/e62d1358-34e4-4899-92b7-a7e569ea2d98/text.js";
+window.HW_BUILD = "1546";
 (function () {
   try {
     var q = new URLSearchParams(location.search).get("v");
@@ -300,7 +306,7 @@ window.HW_BUILD = "1545";
     navigator.serviceWorker.getRegistrations().then(function (regs) {
       return Promise.all(regs.map(function (r) { return r.update(); }));
     }).then(function () {
-      return navigator.serviceWorker.register("./sw.js?v=" + (window.HW_BUILD || "1545"));
+      return navigator.serviceWorker.register("./sw.js?v=" + (window.HW_BUILD || "1546"));
     }).catch(function () {});
   }
 })();
