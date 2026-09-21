@@ -25,6 +25,9 @@
     #stage:has(#opsPanel:not(.hidden)) #hud,
     #stage:has(#hangarPanel:not(.hidden)) #hud,
     #stage:has(#overPanel:not(.hidden)) #hud { display:none !important; }
+    body.playing #metaBar,
+    body.playing #bossEta { display:none !important; }
+    body.playing #lives { display:none !important; }
     #topbar { display:flex; justify-content:space-between; padding:calc(8px + env(safe-area-inset-top,0px)) 10px 0; font-size:11px; gap:8px; }
     #topbar b { color:var(--cyan); font-family:Orbitron,sans-serif; }
     #lives img.life { width:16px !important; height:22px !important; margin-left:3px; vertical-align:middle; }
@@ -233,6 +236,6 @@ window.VOID_SPRITES = {
   nebula:"https://assets-2-prod.whop.com/public/uploads/2026-09-15/e8348390-1436-4f21-919c-c0eadc212465/image.jpg"
 };
 </script>
-<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/a99629c6-b8a4-4618-b4d1-962acc1b528d/text.js"></script>
+<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/737deb4a-1267-4255-9e78-b393b02d013d/text.js"></script>
 </body>
 </html>
