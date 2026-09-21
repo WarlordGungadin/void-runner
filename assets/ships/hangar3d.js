@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-const BUILD = (typeof window !== "undefined" && (window.HW_BUILD || new URLSearchParams(location.search).get("v"))) || "1546";
+const BUILD = (typeof window !== "undefined" && (window.HW_BUILD || new URLSearchParams(location.search).get("v"))) || "1547";
 
 function glbUrl(id) {
   const b64 = (window.HW_GLB_B64 || {})[id];
@@ -145,8 +145,9 @@ function boot() {
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
       const cam = new THREE.PerspectiveCamera(28, w / h, 0.1, 40);
-      const span = Math.max(size.x, size.z, size.y) * 1.35;
-      cam.position.set(center.x, center.y + span * 0.35, center.z + span * 1.15);
+      const span = Math.max(size.x, size.z, size.y) * 1.55;
+      cam.position.set(center.x, center.y + span * 1.55, center.z + span * 0.08);
+      cam.up.set(0, 0, -1);
       cam.lookAt(center);
       bakeRenderer.render(bakeScene, cam);
       const out = document.createElement("canvas");
@@ -167,9 +168,10 @@ function boot() {
     }
   }
 
-  async function loadShip(id) {
+  async function loadShip(id, locked) {
     id = id || "wake";
     if (!["wake", "needle", "anvil", "choir"].includes(id)) id = "wake";
+    canvas.style.filter = locked ? "grayscale(1) brightness(0.62)" : "none";
     if (current && currentId === id) return;
     if (current) {
       scene.remove(current);
@@ -200,6 +202,7 @@ function boot() {
   window.HWHangar = {
     ready: true,
     load: loadShip,
+    preview: (id, locked) => loadShip(id, !!locked),
     sprites,
     id: () => currentId,
   };
