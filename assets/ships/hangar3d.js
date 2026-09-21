@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-const BUILD = (typeof window !== "undefined" && (window.HW_BUILD || new URLSearchParams(location.search).get("v"))) || "1550";
+const BUILD = (typeof window !== "undefined" && (window.HW_BUILD || new URLSearchParams(location.search).get("v"))) || "1551";
 
 function glbUrl(id) {
   if (id === "wake" && window.HW_WAKE_GLB) return window.HW_WAKE_GLB + (window.HW_WAKE_GLB.includes("?") ? "&" : "?") + "v=" + BUILD;
@@ -129,6 +129,38 @@ function boot() {
     obj.position.y += -1.15 - box2.min.y;
   }
 
+  function tipUpCanvas(src) {
+    const w = src.width, h = src.height;
+    const g = src.getContext("2d");
+    const img = g.getImageData(0, 0, w, h);
+    const p = img.data;
+    let sx = 0, sy = 0, n = 0;
+    const xs = [], ys = [];
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        if (p[(y * w + x) * 4 + 3] < 40) continue;
+        sx += x; sy += y; n++;
+        xs.push(x); ys.push(y);
+      }
+    }
+    if (!n) return src;
+    const cx = sx / n, cy = sy / n;
+    let best = 0, tx = cx, ty = cy;
+    for (let i = 0; i < xs.length; i++) {
+      const d = (xs[i] - cx) ** 2 + (ys[i] - cy) ** 2;
+      if (d > best) { best = d; tx = xs[i]; ty = ys[i]; }
+    }
+    const need = -Math.PI / 2 - Math.atan2(ty - cy, tx - cx);
+    const out = document.createElement("canvas");
+    out.width = w;
+    out.height = h;
+    const o = out.getContext("2d");
+    o.translate(w / 2, h / 2);
+    o.rotate(need);
+    o.drawImage(src, -w / 2, -h / 2);
+    return out;
+  }
+
   function bakeSprite(root, id) {
     try {
       const w = 256, h = 320;
@@ -138,40 +170,37 @@ function boot() {
       bakeRenderer.outputColorSpace = THREE.SRGBColorSpace;
       bakeRenderer.toneMapping = THREE.NoToneMapping;
       const bakeScene = new THREE.Scene();
-      bakeScene.add(new THREE.HemisphereLight(0xf2f6ff, 0x1a2230, 1.35));
-      bakeScene.add(new THREE.AmbientLight(0xffffff, 0.7));
-      const k = new THREE.DirectionalLight(0xffffff, 2.4);
-      k.position.set(3, 7, 5);
+      bakeScene.add(new THREE.HemisphereLight(0xffffff, 0x243044, 1.5));
+      bakeScene.add(new THREE.AmbientLight(0xffffff, 0.85));
+      const k = new THREE.DirectionalLight(0xffffff, 2.6);
+      k.position.set(2, 10, 1);
       bakeScene.add(k);
-      const fill = new THREE.DirectionalLight(0x9ec8ff, 0.9);
-      fill.position.set(-4, 3, -2);
+      const fill = new THREE.DirectionalLight(0xb8d4ff, 1.0);
+      fill.position.set(-5, 6, -2);
       bakeScene.add(fill);
-      const rim = new THREE.DirectionalLight(0xff9a3a, 0.55);
-      rim.position.set(0, 2, -6);
-      bakeScene.add(rim);
       const clone = root.clone(true);
       bakeScene.add(clone);
       const box = new THREE.Box3().setFromObject(clone);
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
-      const cam = new THREE.PerspectiveCamera(32, w / h, 0.08, 80);
-      const span = Math.max(size.x, size.z, size.y) * 1.35;
-      cam.up.set(0, 1, 0);
-      cam.position.set(center.x, center.y + span * 0.72, center.z + span * 1.15);
-      cam.lookAt(center.x, center.y + span * 0.04, center.z);
+      const cam = new THREE.PerspectiveCamera(28, w / h, 0.05, 80);
+      const span = Math.max(size.x, size.z, 0.2) * 1.7;
+      cam.up.set(0, 0, -1);
+      cam.position.set(center.x, center.y + span * 2.15, center.z + span * 0.12);
+      cam.lookAt(center.x, center.y, center.z);
       bakeRenderer.render(bakeScene, cam);
-      const out = document.createElement("canvas");
-      out.width = w;
-      out.height = h;
-      const g = out.getContext("2d");
+      const raw = document.createElement("canvas");
+      raw.width = w;
+      raw.height = h;
+      const g = raw.getContext("2d");
       g.drawImage(bakeRenderer.domElement, 0, 0);
       const img = g.getImageData(0, 0, w, h);
       const p = img.data;
       for (let i = 0; i < p.length; i += 4) {
-        if (p[i] + p[i + 1] + p[i + 2] < 18) p[i + 3] = 0;
+        if (p[i] + p[i + 1] + p[i + 2] < 12) p[i + 3] = 0;
       }
       g.putImageData(img, 0, 0);
-      sprites[id] = out;
+      sprites[id] = tipUpCanvas(raw);
       bakeRenderer.dispose();
     } catch (e) {
       console.warn("bake fail", id, e);
