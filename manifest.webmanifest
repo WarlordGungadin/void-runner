@@ -1,0 +1,26 @@
+{
+  "name": "HULLWAKE",
+  "short_name": "HULLWAKE",
+  "description": "Cut a wake through the dark.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#04060f",
+  "theme_color": "#04060f",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "https://assets-2-prod.whop.com/public/uploads/2026-09-15/b2ae9211-f307-4e12-9aa2-34654a53cd51/image.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
