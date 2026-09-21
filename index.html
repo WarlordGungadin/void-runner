@@ -17,6 +17,14 @@
     #game { display:block; width:100%; height:100%; touch-action:none; }
     #hud { position:absolute; inset:0; pointer-events:none; display:flex; flex-direction:column; z-index:10; }
     body:not(.playing) #hud, body:not(.playing) #touch { display:none !important; }
+    body.paused #hud,
+    #stage:has(#pausePanel:not(.hidden)) #hud,
+    #stage:has(#settingsPanel:not(.hidden)) #hud,
+    #stage:has(#shopPanel:not(.hidden)) #hud,
+    #stage:has(#boardPanel:not(.hidden)) #hud,
+    #stage:has(#opsPanel:not(.hidden)) #hud,
+    #stage:has(#hangarPanel:not(.hidden)) #hud,
+    #stage:has(#overPanel:not(.hidden)) #hud { display:none !important; }
     #topbar { display:flex; justify-content:space-between; padding:calc(8px + env(safe-area-inset-top,0px)) 10px 0; font-size:11px; gap:8px; }
     #topbar b { color:var(--cyan); font-family:Orbitron,sans-serif; }
     #lives img.life { width:16px !important; height:22px !important; margin-left:3px; vertical-align:middle; }
@@ -25,8 +33,14 @@
     #bossEta,#bossHud { margin:6px 12px 0; } #bossEta.hidden,#bossHud { display:none; } #bossHud.show { display:block; }
     #bossEtaBar,#bossBar { height:7px; background:#101828; border:1px solid #4df0ff44; overflow:hidden; }
     #bossEtaFill,#bossFill { height:100%; width:0; background:linear-gradient(90deg,#4df0ff,#ffd166); }
-    #overlay { position:absolute; inset:0; display:block; pointer-events:none; background:#050814; }
+    #overlay { position:absolute; inset:0; display:block; pointer-events:none; background:#050814; z-index:20; }
     body.playing #overlay { background:transparent; }
+    body.playing:has(#settingsPanel:not(.hidden)) #overlay,
+    body.playing:has(#pausePanel:not(.hidden)) #overlay,
+    body.playing:has(#shopPanel:not(.hidden)) #overlay,
+    body.playing:has(#boardPanel:not(.hidden)) #overlay,
+    body.playing:has(#opsPanel:not(.hidden)) #overlay,
+    body.playing:has(#hangarPanel:not(.hidden)) #overlay { background:#050814; }
     .panel { pointer-events:auto; text-align:center; padding:24px 18px; background:#070b16; border:0; width:100%; }
     #titlePanel, #hangarPanel, #overPanel, #pausePanel, #settingsPanel, #shopPanel, #boardPanel, #opsPanel { position:absolute; inset:0; width:100%; height:100%; pointer-events:auto; background:#070b16; }
     #opsPanel .ware { display:flex; align-items:center; gap:8px; margin:8px 10px; text-align:left; }
