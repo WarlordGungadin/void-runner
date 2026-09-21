@@ -261,7 +261,10 @@ window.HW_BUILD = "1544";
     var q = new URLSearchParams(location.search).get("v");
     if (q) window.HW_BUILD = q;
   } catch (e) {}
-  document.write('<script src="' + window.HW_ENGINE + "?v=" + window.HW_BUILD + '"><\\/script>');
+  var s = document.createElement("script");
+  s.src = window.HW_ENGINE + "?v=" + window.HW_BUILD;
+  s.async = false;
+  document.head.appendChild(s);
 })();
 </script>
 <script>
