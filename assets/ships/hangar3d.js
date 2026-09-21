@@ -2,11 +2,12 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-const BUILD = (typeof window !== "undefined" && (window.HW_BUILD || new URLSearchParams(location.search).get("v"))) || "1547";
+const BUILD = (typeof window !== "undefined" && (window.HW_BUILD || new URLSearchParams(location.search).get("v"))) || "1549";
 
 function glbUrl(id) {
+  if (id === "wake" && window.HW_WAKE_GLB) return window.HW_WAKE_GLB + (window.HW_WAKE_GLB.includes("?") ? "&" : "?") + "v=" + BUILD;
   const b64 = (window.HW_GLB_B64 || {})[id];
-  if (b64 && b64.length > 80) {
+  if (id !== "wake" && b64 && b64.length > 80) {
     const bin = atob(b64);
     const arr = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
@@ -41,7 +42,7 @@ function boot() {
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
+  renderer.toneMappingExposure = 1.28;
   renderer.setClearColor(0x070b12, 1);
 
   const scene = new THREE.Scene();
@@ -104,11 +105,12 @@ function boot() {
       if (!obj.isMesh || !obj.material) return;
       const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
       for (const m of mats) {
-        if (m.name && /thruster/i.test(m.name)) {
+        if ((m.name && /thruster/i.test(m.name)) || (m.color && m.color.r > 0.6 && m.color.g < 0.45 && m.color.b < 0.25)) {
           m.emissive = new THREE.Color(0xff730d);
-          m.emissiveIntensity = 2.4;
+          m.emissiveIntensity = Math.max(m.emissiveIntensity || 0, 1.6);
           m.needsUpdate = true;
         }
+        if (m.map) m.map.colorSpace = THREE.SRGBColorSpace;
       }
     });
   }
