@@ -29,10 +29,10 @@
     body.playing #overlay { background:transparent; }
     .panel { pointer-events:auto; text-align:center; padding:24px 18px; background:#070b16; border:0; width:100%; }
     #titlePanel, #hangarPanel, #overPanel, #pausePanel, #settingsPanel, #shopPanel, #boardPanel { position:absolute; inset:0; width:100%; height:100%; pointer-events:auto; background:#070b16; }
-    #settingsPanel { overflow-y:auto; }
     #boardList { overflow-y:auto; max-height:58%; }
-    #boardPanel .ware, #shopPanel .ware { display:flex; align-items:center; gap:8px; margin:6px 10px; text-align:left; border:1px solid #4df0ff44; border-radius:10px; padding:8px 10px; }
+    #boardPanel .ware { display:flex; align-items:center; gap:8px; margin:6px 10px; text-align:left; }
     #boardPanel .ware small { display:block; color:#9ad7ff; font-size:10px; margin-top:2px; }
+    #shopPanel .ware { display:flex; align-items:center; gap:8px; margin:8px 14px; text-align:left; border:1px solid #4df0ff44; border-radius:10px; padding:8px 10px; }
     body.ctrl-finger #joyBase { display:none !important; }
     body.ctrl-finger #btnFire, body.auto-on #btnFire { display:none !important; }
     body.auto-on #btnBurst, body.ctrl-finger #btnBurst { right:10px; bottom:calc(14px + env(safe-area-inset-bottom,0px)); }
@@ -44,13 +44,12 @@
     #titlePanel.awake .brand { opacity:1; transition:opacity 1.4s ease .9s; }
     #titlePanel.awake .launch { opacity:1; transition:opacity 1.2s ease 1.7s; }
     #titlePanel::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(4,6,15,.7) 0%,rgba(4,6,15,.25) 40%,rgba(4,6,15,.92) 100%); pointer-events:none; z-index:1; }
-    #contractLine { color:#ffd166; font-size:11px; letter-spacing:.08em; min-height:32px; line-height:1.35; }
     .hidden { display:none !important; }
     .meta-row { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:10px 0 6px; }
-    .meta-row button,#hangarPanel button,#overPanel button,#pausePanel button,#settingsPanel button,#shopPanel button,#boardPanel button,.diff {
+    .meta-row button,#hangarPanel button,#overPanel button,#pausePanel button,#settingsPanel button,.diff {
       border:1px solid #4df0ff66; background:rgba(8,16,36,.75); color:#c8f6ff; font-family:Orbitron,sans-serif; font-size:11px; letter-spacing:.1em; padding:8px 10px; border-radius:8px;
     }
-    #diffRow button.diff.active, #ctrlRow button.diff.active, #autoRow button.diff.active { border-color:#ffd166; color:#ffd166; }
+    #diffRow button.diff.active, #ctrlRow button.diff.active, #autoRow button.diff.active, #boardTabs button.diff.active { border-color:#ffd166; color:#ffd166; }
     #touch { display:none; position:absolute; left:0; right:0; bottom:0; height:210px; pointer-events:none; z-index:5; }
     body.playing #touch { display:block; } body.paused #touch { display:none !important; }
     #joyBase { pointer-events:auto; position:absolute; left:10px; bottom:calc(16px + env(safe-area-inset-bottom,0px)); width:104px; height:104px; border-radius:50%; border:2px solid #4df0ff77; background:rgba(8,16,36,.45); }
@@ -67,6 +66,7 @@
     .ship-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:8px 0 14px; }
     .vol-row { display:flex; align-items:center; gap:10px; margin:8px 18px; font-size:10px; color:#9ad7ff; }
     #pausePanel,#overPanel,#shopPanel,#boardPanel { height:100%; display:flex; flex-direction:column; justify-content:center; }
+    #settingsPanel { overflow-y:auto; }
     #trans { position:absolute; inset:0; z-index:40; pointer-events:none; opacity:0; visibility:hidden; overflow:hidden; }
     #trans.on { opacity:1; visibility:visible; pointer-events:auto; background:rgba(3,4,10,.35); }
     #transFx { position:absolute; inset:0; width:100%; height:100%; display:block; }
@@ -135,8 +135,13 @@
       <div class="panel hidden" id="boardPanel">
         <h1>BOARD</h1>
         <p class="keys" id="boardPilot">PILOT</p>
+        <div class="meta-row" id="boardTabs">
+          <button type="button" class="diff active" data-board="local">THIS PHONE</button>
+          <button type="button" class="diff" data-board="field">DAILY FIELD</button>
+        </div>
+        <p class="hint" id="fieldHint">Local top 10 on this phone</p>
         <div id="boardList"></div>
-        <div class="meta-row"><button type="button" id="btnBoardClear">CLEAR</button><button type="button" id="btnBoardBack">BACK</button></div>
+        <div class="meta-row"><button type="button" id="btnBoardClear">CLEAR LOCAL</button><button type="button" id="btnBoardBack">BACK</button></div>
       </div>
       <div class="panel hidden" id="settingsPanel">
         <h1>SETTINGS</h1>
@@ -204,6 +209,6 @@ window.VOID_SPRITES = {
   nebula:"https://assets-2-prod.whop.com/public/uploads/2026-09-15/e8348390-1436-4f21-919c-c0eadc212465/image.jpg"
 };
 </script>
-<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/0b1cbc01-a2ee-41bf-bc98-a8998bc92dfb/text.js"></script>
+<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/2d0c2c30-3a94-45b8-8662-f9c7c5a6a7b5/text.js"></script>
 </body>
 </html>
