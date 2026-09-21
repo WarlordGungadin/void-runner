@@ -28,7 +28,8 @@
     #overlay { position:absolute; inset:0; display:block; pointer-events:none; background:#050814; }
     body.playing #overlay { background:transparent; }
     .panel { pointer-events:auto; text-align:center; padding:24px 18px; background:#070b16; border:0; width:100%; }
-    #titlePanel, #hangarPanel, #overPanel, #pausePanel, #settingsPanel { position:absolute; inset:0; width:100%; height:100%; pointer-events:auto; background:#070b16; }
+    #titlePanel, #hangarPanel, #overPanel, #pausePanel, #settingsPanel, #shopPanel { position:absolute; inset:0; width:100%; height:100%; pointer-events:auto; background:#070b16; }
+    #shopPanel .ware { display:flex; align-items:center; gap:8px; margin:8px 14px; text-align:left; border:1px solid #4df0ff44; border-radius:10px; padding:8px 10px; }
     body.ctrl-finger #joyBase { display:none !important; }
     body.ctrl-finger #touch { justify-content:flex-end; }
     body.ctrl-finger #btnFire, body.auto-on #btnFire { display:none !important; }
@@ -40,16 +41,9 @@
     #titlePanel.awake .launch { opacity:1; transition:opacity 1.2s ease 1.7s; }
     #titlePanel::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(4,6,15,.7) 0%,rgba(4,6,15,.25) 40%,rgba(4,6,15,.92) 100%); pointer-events:none; z-index:1; }
     #contractLine { color:#ffd166; font-size:11px; letter-spacing:.08em; min-height:32px; line-height:1.35; }
-    .upg { display:flex; align-items:center; gap:8px; margin:8px 0; text-align:left; }
-    .upg-ico, .upg-ico svg { width:36px !important; height:36px !important; flex-shrink:0; display:block; }
-    #upgList { padding:0 8px 12px; }
-    #titlePanel .brand { position:absolute; left:0; right:0; top:12%; z-index:3; }
-    #titlePanel h1 { font-family:Orbitron,sans-serif; letter-spacing:.18em; font-size:clamp(28px,10vw,48px); text-shadow:0 0 16px #4df0ff; }
-    #titlePanel small { display:block; color:var(--gold); letter-spacing:.28em; font-size:11px; margin-top:8px; }
-    #titlePanel .launch { position:absolute; left:0; right:0; bottom:0; z-index:3; padding:16px 14px calc(18px + env(safe-area-inset-bottom,0px)); background:linear-gradient(transparent,rgba(4,6,15,.94) 40%); }
     .hidden { display:none !important; }
     .meta-row { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:10px 0 6px; }
-    .meta-row button,#hangarPanel button,#overPanel button,#pausePanel button,#settingsPanel button,.diff {
+    .meta-row button,#hangarPanel button,#overPanel button,#pausePanel button,#settingsPanel button,#shopPanel button,.diff {
       border:1px solid #4df0ff66; background:rgba(8,16,36,.75); color:#c8f6ff; font-family:Orbitron,sans-serif; font-size:11px; letter-spacing:.1em; padding:8px 10px; border-radius:8px;
     }
     #diffRow button.diff.active, #ctrlRow button.diff.active, #autoRow button.diff.active { border-color:#ffd166; color:#ffd166; }
@@ -66,17 +60,19 @@
     .ship-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:8px 0 14px; }
     .ship-card { display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px 6px 10px; }
     .ship-card svg { width:40px !important; height:50px !important; display:block; }
-    .ship-card b, .ship-card small { display:block; text-align:center; }
     .vol-row { display:flex; align-items:center; gap:10px; margin:8px 18px; font-size:10px; color:#9ad7ff; }
-    .vol-row input { flex:1; }
-    #pausePanel,#overPanel { height:100%; display:flex; flex-direction:column; justify-content:center; }
-    #trans { position:absolute; inset:0; z-index:40; pointer-events:none; opacity:0; visibility:hidden; overflow:hidden; background:#03040a00; }
+    #pausePanel,#overPanel,#shopPanel { height:100%; display:flex; flex-direction:column; justify-content:center; }
+    #trans { position:absolute; inset:0; z-index:40; pointer-events:none; opacity:0; visibility:hidden; overflow:hidden; }
     #trans.on { opacity:1; visibility:visible; pointer-events:auto; background:rgba(3,4,10,.35); }
     #transFx { position:absolute; inset:0; width:100%; height:100%; display:block; }
-    .trans-copy { position:absolute; left:0; right:0; top:42%; text-align:center; z-index:2; pointer-events:none; opacity:0; }
-    #trans.on .trans-copy { opacity:1; transition:opacity .25s ease .2s; }
+    .trans-copy { position:absolute; left:0; right:0; top:42%; text-align:center; z-index:2; opacity:0; }
+    #trans.on .trans-copy { opacity:1; }
     .trans-copy b { display:block; font-family:Orbitron,sans-serif; letter-spacing:.28em; font-size:22px; color:#e8f6ff; text-shadow:0 0 18px #4df0ff; }
     .trans-copy span { display:block; margin-top:8px; color:#ffd166; letter-spacing:.18em; font-size:11px; }
+    #titlePanel h1 { font-family:Orbitron,sans-serif; letter-spacing:.18em; font-size:clamp(28px,10vw,48px); text-shadow:0 0 16px #4df0ff; }
+    #titlePanel small { display:block; color:var(--gold); letter-spacing:.28em; font-size:11px; margin-top:8px; }
+    #titlePanel .brand { position:absolute; left:0; right:0; top:12%; z-index:3; }
+    #titlePanel .launch { position:absolute; left:0; right:0; bottom:0; z-index:3; padding:16px 14px calc(18px + env(safe-area-inset-bottom,0px)); background:linear-gradient(transparent,rgba(4,6,15,.94) 40%); }
   </style>
 </head>
 <body>
@@ -122,6 +118,13 @@
         <div class="meta-row"><button type="button" id="btnResume">CONTINUE</button></div>
         <div class="meta-row"><button type="button" id="btnSave">SAVE</button><button type="button" id="btnPauseSettings">SETTINGS</button><button type="button" id="btnPauseTitle">TITLE</button></div>
         <p id="pauseHint">BANK SAVES ON THIS PHONE</p>
+      </div>
+      <div class="panel hidden" id="shopPanel">
+        <h1>OUTPOST</h1>
+        <p class="keys" id="shopNote">WAVE CLEAR</p>
+        <p class="hint" id="shopBank">RUN 0 · BANK 0</p>
+        <div id="shopWares"></div>
+        <div class="meta-row"><button type="button" id="btnShopGo">CONTINUE</button></div>
       </div>
       <div class="panel hidden" id="settingsPanel">
         <h1>SETTINGS</h1>
@@ -181,6 +184,6 @@ window.VOID_SPRITES = {
   nebula:"https://assets-2-prod.whop.com/public/uploads/2026-09-15/e8348390-1436-4f21-919c-c0eadc212465/image.jpg"
 };
 </script>
-<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/a3780501-10da-4dd7-9bb5-3fdb226ab050/text.js"></script>
+<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/f7f3808c-32d4-44d0-b976-b6dadb6110be/text.js"></script>
 </body>
 </html>
