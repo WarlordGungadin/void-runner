@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-const BUILD = (typeof window !== "undefined" && (window.HW_BUILD || new URLSearchParams(location.search).get("v"))) || "1549";
+const BUILD = (typeof window !== "undefined" && (window.HW_BUILD || new URLSearchParams(location.search).get("v"))) || "1550";
 
 function glbUrl(id) {
   if (id === "wake" && window.HW_WAKE_GLB) return window.HW_WAKE_GLB + (window.HW_WAKE_GLB.includes("?") ? "&" : "?") + "v=" + BUILD;
@@ -131,26 +131,34 @@ function boot() {
 
   function bakeSprite(root, id) {
     try {
-      const w = 192, h = 256;
+      const w = 256, h = 320;
       const bakeRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       bakeRenderer.setSize(w, h, false);
       bakeRenderer.setClearColor(0x000000, 0);
       bakeRenderer.outputColorSpace = THREE.SRGBColorSpace;
+      bakeRenderer.toneMapping = THREE.NoToneMapping;
       const bakeScene = new THREE.Scene();
-      bakeScene.add(new THREE.AmbientLight(0xa0b4c8, 0.8));
-      const k = new THREE.DirectionalLight(0xffffff, 1.2);
-      k.position.set(2, 8, 3);
+      bakeScene.add(new THREE.HemisphereLight(0xf2f6ff, 0x1a2230, 1.35));
+      bakeScene.add(new THREE.AmbientLight(0xffffff, 0.7));
+      const k = new THREE.DirectionalLight(0xffffff, 2.4);
+      k.position.set(3, 7, 5);
       bakeScene.add(k);
+      const fill = new THREE.DirectionalLight(0x9ec8ff, 0.9);
+      fill.position.set(-4, 3, -2);
+      bakeScene.add(fill);
+      const rim = new THREE.DirectionalLight(0xff9a3a, 0.55);
+      rim.position.set(0, 2, -6);
+      bakeScene.add(rim);
       const clone = root.clone(true);
       bakeScene.add(clone);
       const box = new THREE.Box3().setFromObject(clone);
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
-      const cam = new THREE.PerspectiveCamera(28, w / h, 0.1, 40);
-      const span = Math.max(size.x, size.z, size.y) * 1.55;
-      cam.position.set(center.x, center.y + span * 1.55, center.z + span * 0.08);
-      cam.up.set(0, 0, -1);
-      cam.lookAt(center);
+      const cam = new THREE.PerspectiveCamera(32, w / h, 0.08, 80);
+      const span = Math.max(size.x, size.z, size.y) * 1.35;
+      cam.up.set(0, 1, 0);
+      cam.position.set(center.x, center.y + span * 0.72, center.z + span * 1.15);
+      cam.lookAt(center.x, center.y + span * 0.04, center.z);
       bakeRenderer.render(bakeScene, cam);
       const out = document.createElement("canvas");
       out.width = w;
