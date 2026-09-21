@@ -82,7 +82,7 @@
     .ship-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:8px 0 14px; }
     .vol-row { display:flex; align-items:center; gap:10px; margin:8px 18px; font-size:10px; color:#9ad7ff; }
     #pausePanel,#overPanel,#opsPanel { height:100%; display:flex; flex-direction:column; justify-content:center; }
-    #settingsPanel { overflow-y:auto; }
+    #settingsPanel { overflow-y:auto; padding-top:calc(18px + env(safe-area-inset-top, 0px)); }
     #trans { position:absolute; inset:0; z-index:40; pointer-events:none; opacity:0; visibility:hidden; overflow:hidden; }
     #trans.on { opacity:1; visibility:visible; pointer-events:auto; background:rgba(3,4,10,.35); }
     #transFx { position:absolute; inset:0; width:100%; height:100%; display:block; }
@@ -233,6 +233,6 @@ window.VOID_SPRITES = {
   nebula:"https://assets-2-prod.whop.com/public/uploads/2026-09-15/e8348390-1436-4f21-919c-c0eadc212465/image.jpg"
 };
 </script>
-<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/654724c4-2afa-492d-8c61-6a51ddcdc485/text.js"></script>
+<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/12373918-d67d-4df6-9130-5a02c774c168/text.js"></script>
 </body>
 </html>
