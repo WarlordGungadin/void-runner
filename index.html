@@ -262,10 +262,11 @@ window.VOID_SPRITES = {
 <script type="importmap">
 {"imports":{"three":"https://unpkg.com/three@0.170.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.170.0/examples/jsm/"}}
 </script>
-<script type="module" src="./assets/ships/hangar3d.js?v=1548"></script>
+<script>window.HW_WAKE_GLB = "https://assets-2-prod.whop.com/public/uploads/2026-09-22/dcf56115-a38a-4a02-a787-3c77e33cce3f/application.glb";</script>
+<script type="module" src="./assets/ships/hangar3d.js?v=1549"></script>
 <script>
 window.HW_ENGINE = "https://assets-2-prod.whop.com/public/uploads/2026-09-21/24e38c70-8ae9-4cbb-8fab-77068ceb5c78/text.js";
-window.HW_BUILD = "1548";
+window.HW_BUILD = "1549";
 (function () {
   try {
     var q = new URLSearchParams(location.search).get("v");
@@ -306,7 +307,7 @@ window.HW_BUILD = "1548";
     navigator.serviceWorker.getRegistrations().then(function (regs) {
       return Promise.all(regs.map(function (r) { return r.update(); }));
     }).then(function () {
-      return navigator.serviceWorker.register("./sw.js?v=" + (window.HW_BUILD || "1548"));
+      return navigator.serviceWorker.register("./sw.js?v=" + (window.HW_BUILD || "1549"));
     }).catch(function () {});
   }
 })();
