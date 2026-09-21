@@ -31,6 +31,7 @@
     #titlePanel, #hangarPanel, #overPanel, #pausePanel, #settingsPanel { position:absolute; inset:0; width:100%; height:100%; pointer-events:auto; background:#070b16; }
     body.ctrl-finger #joyBase { display:none !important; }
     body.ctrl-finger #touch { justify-content:flex-end; }
+    body.ctrl-finger #btnFire, body.auto-on #btnFire { display:none !important; }
     #titlePanel { padding:0; border:0; background:#050814; }
     #titlePanel img.cover { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 58%; opacity:0; filter:saturate(1.1) brightness(.7); transform:scale(1.08); transition:opacity 2.2s ease, transform 8s ease-out; }
     #titlePanel.awake img.cover { opacity:.88; transform:scale(1); }
@@ -135,7 +136,7 @@
           <button type="button" class="diff" data-auto="0">MANUAL</button>
           <button type="button" class="diff" data-auto="1">AUTO · −30% SCORE</button>
         </div>
-        <p class="hint" id="helpBlurb">JOYSTICK: left circle steers. ONE FINGER: drag the field. FIRE shoots. BURST clears the screen.</p>
+        <p class="hint" id="helpBlurb">JOYSTICK: left circle steers, FIRE / BURST on the right. ONE FINGER: hold to move and shoot, double-tap BURST.</p>
         <div class="meta-row"><button type="button" id="btnSettingsBack">BACK</button></div>
       </div>
       <div class="panel hidden" id="hangarPanel">
@@ -180,6 +181,6 @@ window.VOID_SPRITES = {
   nebula:"https://assets-2-prod.whop.com/public/uploads/2026-09-15/e8348390-1436-4f21-919c-c0eadc212465/image.jpg"
 };
 </script>
-<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/6312f03d-7fac-4ef3-9bf0-ccaabc6c1b82/text.js"></script>
+<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/a3780501-10da-4dd7-9bb5-3fdb226ab050/text.js"></script>
 </body>
 </html>
