@@ -60,7 +60,7 @@
     #boardPanel .ware small { display:block; color:#9ad7ff; font-size:10px; margin-top:2px; }
     #shopPanel .ware { display:flex; align-items:center; gap:8px; margin:8px 14px; text-align:left; border:1px solid #4df0ff44; border-radius:10px; padding:8px 10px; }
     body.ctrl-finger #joyBase { display:none !important; }
-    body.ctrl-finger #btnFire, body.auto-on #btnFire { display:none !important; }
+    body.ctrl-finger #btnFire { display:none !important; }
     body.auto-on #btnBurst, body.ctrl-finger #btnBurst { right:10px; bottom:calc(14px + env(safe-area-inset-bottom,0px)); }
     body.auto-on #btnDodge, body.ctrl-finger #btnDodge { right:78px; bottom:calc(18px + env(safe-area-inset-bottom,0px)); }
     #titlePanel { padding:0; border:0; background:#050814; }
@@ -246,7 +246,7 @@ window.VOID_SPRITES = {
   nebula:"https://assets-2-prod.whop.com/public/uploads/2026-09-15/e8348390-1436-4f21-919c-c0eadc212465/image.jpg"
 };
 </script>
-<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/27842f0e-6bdc-47e9-87b4-fb1738339f27/text.js?v=1534"></script>
+<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/99b7ae4d-a9ea-4cf7-815b-b0c3b9209dbe/text.js?v=1540"></script>
 <script>
 (function () {
   const btn = document.getElementById("btnInstall");
@@ -273,7 +273,7 @@ window.VOID_SPRITES = {
     if (hint) hint.textContent = "iPhone: Share → Add to Home Screen";
   });
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js?v=1534").catch(function () {});
+    navigator.serviceWorker.register("./sw.js?v=1540").catch(function () {});
   }
 })();
 </script>
