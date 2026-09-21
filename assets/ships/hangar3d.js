@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-const BUILD = (typeof window !== "undefined" && (window.HW_BUILD || new URLSearchParams(location.search).get("v"))) || "1551";
+const BUILD = (typeof window !== "undefined" && (window.HW_BUILD || new URLSearchParams(location.search).get("v"))) || "1552";
 
 function glbUrl(id) {
   if (id === "wake" && window.HW_WAKE_GLB) return window.HW_WAKE_GLB + (window.HW_WAKE_GLB.includes("?") ? "&" : "?") + "v=" + BUILD;
@@ -48,15 +48,17 @@ function boot() {
   const scene = new THREE.Scene();
   scene.fog = new THREE.Fog(0x070b12, 12, 28);
 
-  const camera = new THREE.PerspectiveCamera(42, 360 / 220, 0.1, 100);
-  camera.position.set(4.2, 2.4, 5.5);
+  const camera = new THREE.PerspectiveCamera(38, 360 / 220, 0.1, 100);
+  camera.position.set(0.6, 0.35, 5.4);
 
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = true;
-  controls.target.set(0, 0.1, 0);
-  controls.minDistance = 2.5;
-  controls.maxDistance = 14;
+  controls.target.set(0, 0.35, 0);
+  controls.minDistance = 2.2;
+  controls.maxDistance = 12;
   controls.enablePan = false;
+  controls.minPolarAngle = Math.PI * 0.28;
+  controls.maxPolarAngle = Math.PI * 0.72;
 
   scene.add(new THREE.AmbientLight(0x6a7a90, 0.55));
   const key = new THREE.DirectionalLight(0xe8eef8, 1.35);
@@ -74,14 +76,14 @@ function boot() {
     new THREE.MeshStandardMaterial({ color: 0x121821, metalness: 0.7, roughness: 0.55 })
   );
   floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -1.35;
+  floor.position.y = -2.15;
   scene.add(floor);
   const ring = new THREE.Mesh(
     new THREE.RingGeometry(2.2, 2.35, 64),
-    new THREE.MeshBasicMaterial({ color: 0x2a6ad4, transparent: true, opacity: 0.55, side: THREE.DoubleSide })
+    new THREE.MeshBasicMaterial({ color: 0x2a6ad4, transparent: true, opacity: 0.45, side: THREE.DoubleSide })
   );
   ring.rotation.x = -Math.PI / 2;
-  ring.position.y = -1.33;
+  ring.position.y = -2.13;
   scene.add(ring);
 
   const loader = new GLTFLoader();
@@ -118,15 +120,23 @@ function boot() {
   function frameObject(obj) {
     const box = new THREE.Box3().setFromObject(obj);
     const size = box.getSize(new THREE.Vector3());
-    const center = box.getCenter(new THREE.Vector3());
-    obj.position.sub(center);
+    obj.position.sub(box.getCenter(new THREE.Vector3()));
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    obj.scale.setScalar(4.2 / maxDim);
+    obj.scale.setScalar(3.8 / maxDim);
     const box2 = new THREE.Box3().setFromObject(obj);
-    const c2 = box2.getCenter(new THREE.Vector3());
-    obj.position.x -= c2.x;
-    obj.position.z -= c2.z;
-    obj.position.y += -1.15 - box2.min.y;
+    obj.position.sub(box2.getCenter(new THREE.Vector3()));
+  }
+
+  function aimAtNose(obj) {
+    const box = new THREE.Box3().setFromObject(obj);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const noseY = center.y + size.y * 0.2;
+    controls.target.set(center.x, noseY, center.z);
+    const dist = Math.max(size.x, size.z, 1.2) * 1.55 + 2.4;
+    camera.position.set(center.x + dist * 0.22, noseY, center.z + dist * 0.92);
+    camera.lookAt(controls.target);
+    controls.update();
   }
 
   function tipUpCanvas(src) {
@@ -227,6 +237,7 @@ function boot() {
     frameObject(root);
     scene.add(root);
     current = root;
+    aimAtNose(root);
     if (!sprites[id]) bakeSprite(root, id);
   }
 
