@@ -32,9 +32,11 @@
     #settingsPanel { overflow-y:auto; }
     #boardList { overflow-y:auto; max-height:58%; }
     #boardPanel .ware, #shopPanel .ware { display:flex; align-items:center; gap:8px; margin:6px 10px; text-align:left; border:1px solid #4df0ff44; border-radius:10px; padding:8px 10px; }
+    #boardPanel .ware small { display:block; color:#9ad7ff; font-size:10px; margin-top:2px; }
     body.ctrl-finger #joyBase { display:none !important; }
-    body.ctrl-finger #touch { justify-content:flex-end; }
     body.ctrl-finger #btnFire, body.auto-on #btnFire { display:none !important; }
+    body.auto-on #btnBurst, body.ctrl-finger #btnBurst { right:10px; bottom:calc(14px + env(safe-area-inset-bottom,0px)); }
+    body.auto-on #btnDodge, body.ctrl-finger #btnDodge { right:78px; bottom:calc(18px + env(safe-area-inset-bottom,0px)); }
     #titlePanel { padding:0; border:0; background:#050814; }
     #titlePanel img.cover { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 58%; opacity:0; filter:saturate(1.1) brightness(.7); transform:scale(1.08); transition:opacity 2.2s ease, transform 8s ease-out; }
     #titlePanel.awake img.cover { opacity:.88; transform:scale(1); }
@@ -49,13 +51,15 @@
       border:1px solid #4df0ff66; background:rgba(8,16,36,.75); color:#c8f6ff; font-family:Orbitron,sans-serif; font-size:11px; letter-spacing:.1em; padding:8px 10px; border-radius:8px;
     }
     #diffRow button.diff.active, #ctrlRow button.diff.active, #autoRow button.diff.active { border-color:#ffd166; color:#ffd166; }
-    #touch { display:none; position:absolute; left:0; right:0; bottom:calc(8px + env(safe-area-inset-bottom,0px)); justify-content:space-between; align-items:flex-end; padding:0 12px; pointer-events:none; z-index:5; }
-    body.playing #touch { display:flex; } body.paused #touch { display:none !important; }
-    #joyBase { pointer-events:auto; width:118px; height:118px; border-radius:50%; border:2px solid #4df0ff77; background:rgba(8,16,36,.45); position:relative; }
-    #joyKnob { position:absolute; left:50%; top:50%; width:48px; height:48px; margin:-24px 0 0 -24px; border-radius:50%; background:#4df0ff; }
-    #touch button { pointer-events:auto; width:68px; height:68px; border-radius:50%; border:1px solid #4df0ff66; background:rgba(8,16,36,.62); color:#c8f6ff; font-family:Orbitron,sans-serif; }
-    #touch .fire { width:84px; height:84px; border-color:#ff4d9a88; }
-    #btnDodge { width:56px; height:56px; font-size:10px; }
+    #touch { display:none; position:absolute; left:0; right:0; bottom:0; height:210px; pointer-events:none; z-index:5; }
+    body.playing #touch { display:block; } body.paused #touch { display:none !important; }
+    #joyBase { pointer-events:auto; position:absolute; left:10px; bottom:calc(16px + env(safe-area-inset-bottom,0px)); width:104px; height:104px; border-radius:50%; border:2px solid #4df0ff77; background:rgba(8,16,36,.45); }
+    #joyKnob { position:absolute; left:50%; top:50%; width:44px; height:44px; margin:-22px 0 0 -22px; border-radius:50%; background:#4df0ff; }
+    #touch .pads { position:absolute; right:0; bottom:0; width:160px; height:180px; pointer-events:none; }
+    #touch button { pointer-events:auto; position:absolute; border-radius:50%; border:1px solid #4df0ff66; background:rgba(8,16,36,.62); color:#c8f6ff; font-family:Orbitron,sans-serif; }
+    #btnDodge { width:52px; height:52px; font-size:9px; right:96px; bottom:calc(42px + env(safe-area-inset-bottom,0px)); }
+    #btnBurst { width:58px; height:58px; font-size:9px; right:14px; bottom:calc(108px + env(safe-area-inset-bottom,0px)); }
+    #touch .fire { width:86px; height:86px; border-color:#ff4d9a88; right:8px; bottom:calc(12px + env(safe-area-inset-bottom,0px)); }
     #metaBar { padding:8px 12px 0; font-size:10px; color:#9ad7ff; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; }
     #hangarPanel { overflow-y:auto; max-height:100%; }
     #hangarViewWrap { position:relative; border:1px solid #4df0ff44; border-radius:12px; overflow:hidden; margin:6px 0 10px; pointer-events:auto; }
@@ -81,7 +85,7 @@
     <canvas id="game" width="390" height="694"></canvas>
     <div id="hud">
       <div id="topbar">
-        <div class="stat"><span>HULLWAKE</span> SCORE <b id="score">0</b> WAVE <b id="wave">1</b> BEST <b id="best">0</b> <span id="lives">♥♥♥</span></div>
+        <div class="stat"><span>SCORE <b id="score">0</b></span> <span>WAVE <b id="wave">1</b></span> <span>BEST <b id="best">0</b></span> <span id="lives">♥♥♥</span></div>
         <div id="hudBtns">
           <button type="button" id="btnMute">🔊</button>
           <button type="button" id="btnPause">Ⅱ</button>
@@ -141,13 +145,13 @@
           <button type="button" class="diff" data-ctrl="stick">JOYSTICK</button>
           <button type="button" class="diff" data-ctrl="finger">ONE FINGER</button>
         </div>
-        <p class="hint" id="ctrlExplain">Left stick moves. FIRE and BURST stay on the right.</p>
+        <p class="hint" id="ctrlExplain">Left stick moves. FIRE / BURST / DODGE stay on the right.</p>
         <p class="keys">AUTO FIRE</p>
         <div class="meta-row" id="autoRow">
           <button type="button" class="diff" data-auto="0">MANUAL</button>
           <button type="button" class="diff" data-auto="1">AUTO · −30% SCORE</button>
         </div>
-        <p class="hint" id="helpBlurb">JOYSTICK: stick + FIRE / DODGE / BURST. ONE FINGER: hold to shoot, flick to dodge, double-tap BURST.</p>
+        <p class="hint" id="helpBlurb">JOYSTICK: left stick, right FIRE cluster. ONE FINGER: hold to shoot, flick to dodge, double-tap BURST.</p>
         <p class="keys">CALLSIGN</p>
         <input id="callsignIn" maxlength="12" placeholder="PILOT" style="width:70%;margin:6px auto 10px;display:block;background:#0a1224;border:1px solid #4df0ff66;color:#e8f6ff;padding:8px;text-align:center;letter-spacing:.16em;font-family:Orbitron,sans-serif;" />
         <p class="keys">TRANSFER CODE</p>
@@ -200,6 +204,6 @@ window.VOID_SPRITES = {
   nebula:"https://assets-2-prod.whop.com/public/uploads/2026-09-15/e8348390-1436-4f21-919c-c0eadc212465/image.jpg"
 };
 </script>
-<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/004b4ef7-a40a-49e4-a98a-9390d20ac6c9/text.js"></script>
+<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/dd22aa49-efcc-44b0-98eb-00cf14dc8ae7/text.js"></script>
 </body>
 </html>
