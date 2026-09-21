@@ -4,9 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#04060f" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="HULLWAKE" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>HULLWAKE — Space Shooter</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="https://assets-2-prod.whop.com/public/uploads/2026-09-15/b2ae9211-f307-4e12-9aa2-34654a53cd51/image.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
   <style>
@@ -98,6 +104,7 @@
     #titlePanel small { display:block; color:var(--gold); letter-spacing:.28em; font-size:11px; margin-top:8px; }
     #titlePanel .brand { position:absolute; left:0; right:0; top:12%; z-index:3; }
     #titlePanel .launch { position:absolute; left:0; right:0; bottom:0; z-index:3; padding:16px 14px calc(18px + env(safe-area-inset-bottom,0px)); background:linear-gradient(transparent,rgba(4,6,15,.94) 40%); }
+    #installHint { color:#9ad7ff; font-size:10px; letter-spacing:.12em; margin-top:6px; }
   </style>
 </head>
 <body>
@@ -134,7 +141,9 @@
             <button type="button" id="btnBoard">BOARD</button>
             <button type="button" id="btnSettings">SETTINGS</button>
             <button type="button" id="btnLaunch">ENDLESS</button>
+            <button type="button" id="btnInstall">ADD TO HOME</button>
           </div>
+          <p id="installHint">iPhone: Share → Add to Home Screen</p>
         </div>
       </div>
       <div class="panel hidden" id="pausePanel">
@@ -237,6 +246,36 @@ window.VOID_SPRITES = {
   nebula:"https://assets-2-prod.whop.com/public/uploads/2026-09-15/e8348390-1436-4f21-919c-c0eadc212465/image.jpg"
 };
 </script>
-<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/27842f0e-6bdc-47e9-87b4-fb1738339f27/text.js?v=1533"></script>
+<script src="https://assets-2-prod.whop.com/public/uploads/2026-09-21/27842f0e-6bdc-47e9-87b4-fb1738339f27/text.js?v=1534"></script>
+<script>
+(function () {
+  const btn = document.getElementById("btnInstall");
+  const hint = document.getElementById("installHint");
+  const standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+  let deferred = null;
+  if (standalone) {
+    if (btn) btn.classList.add("hidden");
+    if (hint) hint.classList.add("hidden");
+  }
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferred = e;
+    if (btn) btn.classList.remove("hidden");
+  });
+  if (btn) btn.addEventListener("click", async () => {
+    if (deferred) {
+      deferred.prompt();
+      await deferred.userChoice;
+      deferred = null;
+      btn.classList.add("hidden");
+      return;
+    }
+    if (hint) hint.textContent = "iPhone: Share → Add to Home Screen";
+  });
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js?v=1534").catch(function () {});
+  }
+})();
+</script>
 </body>
 </html>
